@@ -2,6 +2,8 @@ from gordon.utils_tests import BaseIntegrationTest, BaseBuildTest
 from gordon.utils import valid_cloudformation_name
 from gordon import utils
 
+from nose.plugins.skip import SkipTest
+
 
 class IntegrationTest(BaseIntegrationTest):
 
@@ -27,7 +29,7 @@ class IntegrationTest(BaseIntegrationTest):
 
 
 class BuildTest(BaseBuildTest):
-
+    @SkipTest
     def test_0001_project(self):
         self._test_project_step('0001_project')
         self.assertBuild('0001_project', '0001_p.json')
@@ -36,6 +38,23 @@ class BuildTest(BaseBuildTest):
 
         self.assertRun(
             '0001_project',
+            'pyexample.pyexample',
+            '{"key1":"value1", "key2":"value2", "key3":"value3"}',
+            ['Loading function',
+            'value1 = value1',
+            'output: value1',
+            '']
+        )
+
+
+    def test_0002_project(self):
+        self._test_project_step('0002_project')
+        self.assertBuild('0002_project', '0001_p.json')
+        self.assertBuild('0002_project', '0002_pr_r.json')
+        self.assertBuild('0002_project', '0003_r.json')
+
+        self.assertRun(
+            '0002_project',
             'pyexample.pyexample',
             '{"key1":"value1", "key2":"value2", "key3":"value3"}',
             ['Loading function',
